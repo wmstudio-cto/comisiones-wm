@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Whole Models — Sistema de Comisión Quincenal</title>
+<style>
+:root{
+  --bg:#090909;--panel:#121212;--panel2:#181818;--line:#2b2b2b;
+  --gold:#d8b36a;--gold2:#f0d49a;--rose:#c98f9d;--text:#f4f1eb;
+  --muted:#aaa39a;--danger:#d66d6d;--ok:#9fcf9f;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(circle at 80% 0%,#2b2118 0,#090909 35%);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;line-height:1.55}
+a{color:inherit;text-decoration:none}
+.container{width:min(1180px,92%);margin:auto}
+.nav{position:sticky;top:0;z-index:20;background:rgba(9,9,9,.88);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.navin{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-weight:900;letter-spacing:.18em;color:var(--gold2)}
+.logo span{display:block;font-size:10px;letter-spacing:.28em;color:#9d958a;margin-top:-2px}
+.navlinks{display:flex;gap:18px;overflow:auto;font-size:12px;color:#c5c0b8}
+.navlinks a{white-space:nowrap}
+.hero{padding:100px 0 75px;position:relative;overflow:hidden}
+.hero:after{content:"WM";position:absolute;right:-30px;top:40px;font-size:240px;font-weight:900;color:rgba(216,179,106,.035);pointer-events:none}
+.kicker{color:var(--gold);text-transform:uppercase;letter-spacing:.22em;font-size:11px;font-weight:800}
+h1{font-size:clamp(42px,7vw,82px);line-height:.95;max-width:850px;margin:15px 0 25px;letter-spacing:-.05em}
+h2{font-size:clamp(28px,4vw,46px);line-height:1.05;margin:0 0 15px;letter-spacing:-.03em}
+h3{margin:0 0 8px}
+.lead{max-width:720px;color:#c5c0b8;font-size:18px}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.badge{border:1px solid #4a3b25;background:#16120d;padding:9px 13px;border-radius:999px;color:var(--gold2);font-size:12px}
+section{padding:75px 0;border-top:1px solid var(--line)}
+.sectionhead{margin-bottom:30px;max-width:780px}
+.grid{display:grid;gap:16px}
+.grid3{grid-template-columns:repeat(3,1fr)}
+.grid5{grid-template-columns:repeat(5,1fr)}
+.card{background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));border:1px solid var(--line);border-radius:20px;padding:24px}
+.starcard{text-align:center;min-height:155px;display:flex;flex-direction:column;justify-content:center}
+.stars{color:var(--gold2);font-size:23px;letter-spacing:2px}
+.percent{font-size:30px;font-weight:900;margin-top:6px}
+.small{font-size:12px;color:var(--muted)}
+.warn{border-color:#604141;background:linear-gradient(145deg,#241515,#121010)}
+.ok{border-color:#3e573e}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:18px}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:15px 14px;border-bottom:1px solid var(--line);text-align:center}
+th{background:#171411;color:var(--gold2);font-size:12px;text-transform:uppercase;letter-spacing:.07em}
+td:first-child,th:first-child{text-align:left}
+tr:last-child td{border-bottom:0}
+.base{color:var(--gold2);font-weight:800}
+.zero{color:var(--ok)}
+.minus{color:#e9a1a1;font-weight:700}
+.formula{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:10px;align-items:center}
+.formbox{padding:24px;border:1px solid var(--line);border-radius:18px;background:#111}
+.formbox strong{display:block;font-size:26px;color:var(--gold2)}
+.op{font-size:26px;color:var(--muted)}
+.example{position:relative;overflow:hidden}
+.example .number{position:absolute;right:20px;top:8px;font-size:70px;font-weight:900;color:rgba(216,179,106,.08)}
+.calc{background:linear-gradient(145deg,#17130e,#0e0e0e);border:1px solid #5b482a}
+.inputs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+label{font-size:12px;color:var(--muted);display:block;margin-bottom:7px}
+select,input{width:100%;padding:13px 14px;border-radius:10px;border:1px solid #3a342c;background:#0c0c0c;color:var(--text);font-size:15px}
+.result{margin-top:18px;padding:24px;border-radius:16px;background:#0b0b0b;border:1px solid #3d3528;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.result .big{font-size:48px;font-weight:900;color:var(--gold2)}
+.note{font-size:13px;color:#b6afa6}
+.timeline{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.step{padding:18px 12px;text-align:center;border-top:2px solid var(--gold);background:#121212;border-radius:12px}
+.step b{display:block;color:var(--gold2);font-size:13px;margin-bottom:5px}
+footer{padding:50px 0 70px;text-align:center;color:#8f8980}
+footer strong{color:var(--gold2);letter-spacing:.18em}
+@media(max-width:900px){.grid5{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}.formula{grid-template-columns:1fr;}.op{text-align:center}.inputs{grid-template-columns:1fr}.timeline{grid-template-columns:1fr 1fr}}
+@media(max-width:560px){.hero{padding:70px 0}.grid3,.grid5{grid-template-columns:1fr}.card{padding:20px}.result{align-items:flex-start;flex-direction:column}.navin{height:60px}.navlinks{display:none}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="container navin">
+    <a href="#inicio" class="logo">WM<span>WHOLE MODELS</span></a>
+    <div class="navlinks">
+      <a href="#escala">Escala</a><a href="#puntualidad">Puntualidad</a><a href="#modelos">Modelos</a>
+      <a href="#formula">Fórmula</a><a href="#tabla">Tabla</a><a href="#calculadora">Calculadora</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="inicio">
+  <div class="container">
+    <div class="kicker">Whole Models · Reglamento interno</div>
+    <h1>Sistema de<br><span style="color:var(--gold2)">Comisión Quincenal</span></h1>
+    <p class="lead">Un sistema visual, medible y transparente para determinar la comisión de cada integrante a partir de su desempeño, puntualidad y evaluación de las modelos.</p>
+    <div class="badges">
+      <span class="badge">Evaluación quincenal</span><span class="badge">Puntualidad</span><span class="badge">Calidad de servicio</span><span class="badge">Comisión final ≥ 0%</span>
+    </div>
+  </div>
+</header>
+
+<section id="escala">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">01 · Calificación</div><h2>La calificación define la comisión base</h2><p class="note">La evaluación quincenal asigna un porcentaje base antes de aplicar las deducciones.</p></div>
+  <div class="grid grid5">
+    <div class="card starcard"><div class="stars">★★★★★</div><div class="percent">100%</div><div class="small">5 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★★★½</div><div class="percent">90%</div><div class="small">4,5 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★★★</div><div class="percent">80%</div><div class="small">4 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★★½</div><div class="percent">70%</div><div class="small">3,5 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★★</div><div class="percent">60%</div><div class="small">3 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★½</div><div class="percent">50%</div><div class="small">2,5 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★★</div><div class="percent">40%</div><div class="small">2 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★½</div><div class="percent">30%</div><div class="small">1,5 estrellas</div></div>
+    <div class="card starcard"><div class="stars">★</div><div class="percent">20%</div><div class="small">1 estrella</div></div>
+  </div>
+</div>
+</section>
+
+<section id="puntualidad">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">02 · Puntualidad</div><h2>Las llegadas tarde generan deducciones</h2><p class="note">El conteo corresponde a la totalidad de llegadas tarde registradas durante la quincena.</p></div>
+  <div class="grid grid3">
+    <div class="card ok"><div class="kicker">0 llegadas tarde</div><h3>Sin deducción</h3><div class="percent">0%</div><p class="small">Mantiene intacta la comisión base.</p></div>
+    <div class="card"><div class="kicker">1 llegada tarde</div><h3>Deducción leve</h3><div class="percent">−10%</div><p class="small">Se descuenta 10 puntos porcentuales.</p></div>
+    <div class="card"><div class="kicker">2 llegadas tarde</div><h3>Deducción acumulada</h3><div class="percent">−30%</div><p class="small">Se descuenta 30 puntos porcentuales.</p></div>
+    <div class="card warn"><div class="kicker">3 llegadas tarde</div><h3>Medida administrativa</h3><div class="percent">−50%</div><p class="small"><b>+ proceso de descargos.</b></p></div>
+  </div>
+</div>
+</section>
+
+<section id="modelos">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">03 · Evaluación de modelos</div><h2>El promedio refleja la calidad del acompañamiento</h2><p class="note">El promedio obtenido por la evaluación de las modelos genera una deducción adicional.</p></div>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Promedio</th><th>Deducción</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td><b>5</b></td><td class="zero">0%</td><td>Sin deducción</td></tr>
+      <tr><td><b>4</b></td><td class="minus">−10%</td><td>Deducción del 10%</td></tr>
+      <tr><td><b>3</b></td><td class="minus">−40%</td><td>Deducción del 40%</td></tr>
+      <tr><td><b>2</b></td><td class="minus">−60%</td><td>Deducción del 60%</td></tr>
+      <tr><td><b>1</b></td><td class="minus">−90%</td><td>Deducción del 90%</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<section id="formula">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">04 · Cálculo</div><h2>Una fórmula simple y transparente</h2></div>
+  <div class="formula">
+    <div class="formbox"><span class="small">Punto de partida</span><strong>Comisión base</strong><span class="small">según estrellas</span></div>
+    <div class="op">−</div>
+    <div class="formbox"><span class="small">Deducción 1</span><strong>Puntualidad</strong><span class="small">según llegadas tarde</span></div>
+    <div class="op">−</div>
+    <div class="formbox"><span class="small">Deducción 2</span><strong>Modelos</strong><span class="small">según promedio</span></div>
+  </div>
+  <p class="note" style="margin-top:18px">La comisión final nunca podrá ser inferior al <b>0%</b>.</p>
+</div>
+</section>
+
+<section id="tabla">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">05 · Referencia rápida</div><h2>Comisión después de tardanzas</h2><p class="note">Esta tabla muestra únicamente el efecto de las llegadas tarde. La deducción por promedio de modelos se aplica adicionalmente.</p></div>
+  <div class="tablewrap">
+  <table>
+    <thead><tr><th>Calificación</th><th>Base</th><th>0 tardanzas</th><th>1 tardanza</th><th>2 tardanzas</th><th>3 tardanzas*</th></tr></thead>
+    <tbody>
+      <tr><td>★★★★★</td><td class="base">100%</td><td>100%</td><td>90%</td><td>70%</td><td>50%</td></tr>
+      <tr><td>★★★★½</td><td class="base">90%</td><td>90%</td><td>80%</td><td>60%</td><td>40%</td></tr>
+      <tr><td>★★★★</td><td class="base">80%</td><td>80%</td><td>70%</td><td>50%</td><td>30%</td></tr>
+      <tr><td>★★★½</td><td class="base">70%</td><td>70%</td><td>60%</td><td>40%</td><td>20%</td></tr>
+      <tr><td>★★★</td><td class="base">60%</td><td>60%</td><td>50%</td><td>30%</td><td>10%</td></tr>
+      <tr><td>★★½</td><td class="base">50%</td><td>50%</td><td>40%</td><td>20%</td><td>0%</td></tr>
+      <tr><td>★★</td><td class="base">40%</td><td>40%</td><td>30%</td><td>10%</td><td>0%</td></tr>
+      <tr><td>★½</td><td class="base">30%</td><td>30%</td><td>20%</td><td>0%</td><td>0%</td></tr>
+      <tr><td>★</td><td class="base">20%</td><td>20%</td><td>10%</td><td>0%</td><td>0%</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p class="small" style="margin-top:12px">* Tres llegadas tarde: −50% y proceso de descargos.</p>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div class="kicker">06 · Ejemplos</div><h2>Cómo se aplica en situaciones reales</h2></div>
+  <div class="grid grid3">
+    <div class="card example"><div class="number">01</div><div class="kicker">Sobresaliente</div><h3>★★★★★ · 100%</h3><p>0 tardanzas · promedio de modelos 5</p><strong class="percent">100%</strong><p class="small">100 − 0 − 0 = 100%</p></div>
+    <div class="card example"><div class="number">02</div><div class="kicker">Una tardanza</div><h3>★★★★½ · 90%</h3><p>1 tardanza · promedio de modelos 5</p><strong class="percent">80%</strong><p class="small">90 − 10 − 0 = 80%</p></div>
+    <div class="card example"><div class="number">03</div><div class="kicker">Dos tardanzas</div><h3>★★★★★ · 100%</h3><p>2 tardanzas · promedio de modelos 4</p><strong class="percent">60%</strong><p class="small">100 − 30 − 10 = 60%</p></div>
+    <div class="card example"><div class="number">04</div><div class="kicker">Promedio bajo</div><h3>★★★★ · 80%</h3><p>0 tardanzas · promedio de modelos 3</p><strong class="percent">40%</strong><p class="small">80 − 0 − 40 = 40%</p></div>
+    <div class="card example warn"><div class="number">05</div><div class="kicker">Tres tardanzas</div><h3>★★★★★ · 100%</h3><p>3 tardanzas · promedio de modelos 5</p><strong class="percent">50%</strong><p class="small">100 − 50 − 0 = 50% + descargos</p></div>
+  </div>
+</div>
+</section>
+
+<section id="calculadora">
+<div class="container">
+  <div class="sectionhead"><div class="kicker">07 · Herramienta</div><h2>Calculadora de comisión</h2><p class="note">Selecciona los datos de una persona para visualizar el porcentaje final.</p></div>
+  <div class="card calc">
+    <div class="inputs">
+      <div><label>Calificación quincenal</label>
+        <select id="rating">
+          <option value="100">★★★★★ — 100%</option><option value="90">★★★★½ — 90%</option><option value="80">★★★★ — 80%</option>
+          <option value="70">★★★½ — 70%</option><option value="60">★★★ — 60%</option><option value="50">★★½ — 50%</option>
+          <option value="40">★★ — 40%</option><option value="30">★½ — 30%</option><option value="20">★ — 20%</option>
+        </select>
+      </div>
+      <div><label>Llegadas tarde</label>
+        <select id="late"><option value="0">0 — 0%</option><option value="10">1 — −10%</option><option value="30">2 — −30%</option><option value="50">3 — −50% + descargos</option></select>
+      </div>
+      <div><label>Promedio de modelos</label>
+        <select id="modelAvg"><option value="0">5 — 0%</option><option value="10">4 — −10%</option><option value="40">3 — −40%</option><option value="60">2 — −60%</option><option value="90">1 — −90%</option></select>
+      </div>
+    </div>
+    <div class="result">
+      <div><div class="small">COMISIÓN FINAL</div><div class="big" id="final">100%</div></div>
+      <div class="note" id="detail">100% base − 0% tardanzas − 0% modelos</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="sectionhead"><div class="kicker">08 · Proceso</div><h2>Así se liquida cada quincena</h2></div>
+  <div class="timeline">
+    <div class="step"><b>01</b>Calificación quincenal</div>
+    <div class="step"><b>02</b>Comisión base</div>
+    <div class="step"><b>03</b>Registro de tardanzas</div>
+    <div class="step"><b>04</b>Promedio de modelos</div>
+    <div class="step"><b>05</b>Comisión final</div>
+  </div>
+</div>
+</section>
+
+<section>
+<div class="container">
+  <div class="card warn">
+    <div class="kicker">Regla general</div>
+    <h2 style="font-size:30px">La comisión final nunca será inferior al 0%.</h2>
+    <p class="note">Las deducciones se aplican sobre el porcentaje de comisión base. La tabla de referencia de tardanzas no incorpora todavía la deducción adicional por promedio de modelos.</p>
+  </div>
+</div>
+</section>
+
+<footer>
+  <div class="container">
+    <strong>WHOLE MODELS</strong>
+    <p>Sistema de Calificación y Comisión Quincenal · Documento interno</p>
+  </div>
+</footer>
+
+<script>
+const rating=document.getElementById('rating');
+const late=document.getElementById('late');
+const modelAvg=document.getElementById('modelAvg');
+const final=document.getElementById('final');
+const detail=document.getElementById('detail');
+function calc(){
+  const base=Number(rating.value), l=Number(late.value), m=Number(modelAvg.value);
+  const result=Math.max(0,base-l-m);
+  final.textContent=result+'%';
+  detail.textContent=`${base}% base − ${l}% tardanzas − ${m}% modelos`;
+}
+[rating,late,modelAvg].forEach(x=>x.addEventListener('change',calc));
+calc();
+</script>
+</body>
+</html>
